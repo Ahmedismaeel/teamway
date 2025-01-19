@@ -51,6 +51,27 @@ jobs:
         pod install
         cd ..
 
+    - name: Install Fastlane
+      run: sudo gem install fastlane -NV
+
+    - name: Download Certificates and Provisioning Profiles
+      uses: actions/download-artifact@v2
+      with:
+        name: certificates
+        path: ios/certificates
+
+    - name: Install Certificates
+      run: |
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        cp ios/certificates/*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+        security create-keychain -p "" build.keychain
+        security import ios/certificates/AppleWWDRCAG3.cer -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
+        security import ios/certificates/DistributionCertificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secrets.CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+        security list-keychains -s ~/Library/Keychains/build.keychain
+        security default-keychain -s ~/Library/Keychains/build.keychain
+        security unlock-keychain -p "" ~/Library/Keychains/build.keychain
+        security set-key-partition-list -S apple-tool:,apple: -s -k "" ~/Library/Keychains/build.keychain
+
     - name: Create exportOptions.plist
       run: |
         cat <<EOF > ios/exportOptions.plist
