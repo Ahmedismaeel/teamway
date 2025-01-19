@@ -19,7 +19,10 @@ jobs:
         ruby-version: '3.1.0'
 
     - name: Create Gemfile
-      run: echo "source 'https://rubygems.org'\ngem 'fastlane'\ngem 'cocoapods'" > Gemfile
+      run: |
+        echo "source 'https://rubygems.org'" > Gemfile
+        echo "gem 'fastlane'" >> Gemfile
+        echo "gem 'cocoapods'" >> Gemfile
 
     - name: Install dependencies
       run: |
