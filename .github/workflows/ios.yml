@@ -35,6 +35,7 @@ jobs:
         if ! grep -q "platform :ios, '14.0'" ios/Podfile; then
           echo "platform :ios, '14.0'" >> ios/Podfile
         fi 
+        xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
     - name: Set CocoaPods Base Configuration
       run: |
@@ -61,12 +62,12 @@ jobs:
         echo "platform :ios do" >> fastlane/Fastfile
         echo "  desc 'Deploy to TestFlight'" >> fastlane/Fastfile
         echo "  lane :beta do" >> fastlane/Fastfile
-        echo "    build_app(scheme: 'Runner')" >> fastlane/Fastfile
+        echo "    build_app(scheme: 'Runner', export_method: 'app-store', export_options: { provisioningProfiles: { 'com.intelligentprojects.internalApp' => 'match AppStore com.intelligentprojects.internalApp' } })" >> fastlane/Fastfile
         echo "    upload_to_testflight(skip_waiting_for_build_processing: true)" >> fastlane/Fastfile
         echo "  end" >> fastlane/Fastfile
         echo "  desc 'Deploy to Firebase App Distribution'" >> fastlane/Fastfile
         echo "  lane :firebase do" >> fastlane/Fastfile
-        echo "    build_app(scheme: 'Runner')" >> fastlane/Fastfile
+        echo "    build_app(scheme: 'Runner', export_method: 'ad-hoc', export_options: { provisioningProfiles: { 'com.intelligentprojects.internalApp' => 'match AdHoc com.intelligentprojects.internalApp' } })" >> fastlane/Fastfile
         echo "    firebase_app_distribution(app: ENV['FIREBASE_APP_ID'], testers: 'testers@example.com')" >> fastlane/Fastfile
         echo "  end" >> fastlane/Fastfile
         echo "end" >> fastlane/Fastfile
@@ -86,6 +87,10 @@ jobs:
         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} 
         APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }} 
         APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+        MATCH_KEYCHAIN_NAME: ${{ secrets.MATCH_KEYCHAIN_NAME }}
+        MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
 
     - name: Deploy to Firebase App Distribution
       if: success()
@@ -95,3 +100,7 @@ jobs:
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+        MATCH_KEYCHAIN_NAME: ${{ secrets.MATCH_KEYCHAIN_NAME }}
+        MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
