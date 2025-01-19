@@ -52,57 +52,34 @@ jobs:
         cd ..
 
     - name: Install Fastlane
-      run: sudo gem install fastlane -NV
+      run: sudo gem install fastlane
 
-    - name: Download Certificates and Provisioning Profiles
-      uses: actions/download-artifact@v3
-      with:
-        name: certificates
-        path: ios/certificates
-
-    - name: Install Certificates
+    - name: Initialize Fastlane
       run: |
-        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        cp ios/certificates/*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
-        security create-keychain -p "" build.keychain
-        security import ios/certificates/AppleWWDRCAG3.cer -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
-        security import ios/certificates/DistributionCertificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secrets.CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
-        security list-keychains -s ~/Library/Keychains/build.keychain
-        security default-keychain -s ~/Library/Keychains/build.keychain
-        security unlock-keychain -p "" ~/Library/Keychains/build.keychain
-        security set-key-partition-list -S apple-tool:,apple: -s -k "" ~/Library/Keychains/build.keychain
+        cd ios
+        FASTLANE_SKIP_CONFIRM=true fastlane init
+        cd ..
 
-    - name: Create exportOptions.plist
+    - name: Set up Fastlane
       run: |
-        cat <<EOF > ios/exportOptions.plist
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0">
-        <dict>
-          <key>method</key>
-          <string>app-store</string>
-          <key>uploadBitcode</key>
-          <false/>
-          <key>uploadSymbols</key>
-          <true/>
-          <key>compileBitcode</key>
-          <true/>
-        </dict>
-        </plist>
-        EOF
-
-    - name: Build iOS IPA
-      env:
-        APPLE_ID: ${{ secrets.APPLE_ID }}
-        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-        APP_STORE_CONNECT_API_ISSUER: ${{ secrets.APP_STORE_CONNECT_API_ISSUER }}
-      run: |
-        flutter build ipa --release --export-options-plist=ios/exportOptions.plist
+        cd ios
+        bundle install
+        cd ..
 
     - name: Deploy to TestFlight
+      run: |
+        cd ios
+        FASTLANE_SKIP_CONFIRM=true bundle exec fastlane beta
+      env:
+        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} 
+        APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }} 
+        APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+
+    - name: Deploy to Firebase App Distribution
       if: success()
       run: |
-        xcrun altool --upload-app -f build/ios/ipa/TeamwayApp.ipa \
-        -t ios --apiKey $APP_STORE_CONNECT_API_KEY --apiIssuer $APP_STORE_CONNECT_API_ISSUER
-
-
+        cd ios
+        FASTLANE_SKIP_CONFIRM=true bundle exec fastlane firebase
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
