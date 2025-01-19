@@ -18,6 +18,9 @@ jobs:
       with:
         ruby-version: '3.1.0'
 
+    - name: Create Gemfile
+      run: echo "source 'https://rubygems.org'\ngem 'fastlane'\ngem 'cocoapods'" > Gemfile
+
     - name: Install dependencies
       run: |
         gem install bundler
