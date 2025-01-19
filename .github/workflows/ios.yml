@@ -51,6 +51,9 @@ jobs:
         pod install
         cd ..
 
+    - name: Install Fastlane
+      run: sudo gem install fastlane
+
     - name: Initialize Fastlane
       run: |
         cd ios
