@@ -1,9 +1,9 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:internal_app/global/end_points.dart';
 import 'package:internal_app/global/helper/api_provider.dart';
 import 'package:internal_app/global/helper/date_time_helper.dart';
@@ -141,7 +141,7 @@ class _FacebookPostWidgetState extends ConsumerState<FacebookPostWidget> {
                 ],
               ),
               const SizedBox(height: 10),
-              HtmlWidget(comment.description.s),
+              Html(data: comment.description.s),
               const SizedBox(height: 10),
               Wrap(
                 children: [

@@ -1,7 +1,8 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+// import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:internal_app/global/helper/dialog_widget.dart';
 import 'package:internal_app/global/helper/provider_helper.dart';
@@ -108,7 +109,7 @@ class CheckListView extends ConsumerWidget {
                                   "$e".log();
                                   SmartDialog.show(
                                       builder: (BuildContext context) {
-                                    return HtmlWidget(e);
+                                    return Html(data: e);
                                   });
                                   // myDialog(
                                   //     context,

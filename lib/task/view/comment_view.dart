@@ -3,8 +3,9 @@ import 'package:chat_bubbles/message_bars/message_bar.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+// import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:internal_app/global/helper/dialog_widget.dart';
@@ -102,7 +103,7 @@ class CommentView extends ConsumerWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  HtmlWidget("${comment.description}"),
+                                  Html(data: "${comment.description}"),
                                   SubmitWidget(
                                     provider: addCommentControllerProvider,
                                     onSuccess: (s) {},
@@ -110,7 +111,7 @@ class CommentView extends ConsumerWidget {
                                       "$e".log();
                                       SmartDialog.show(
                                           builder: (BuildContext context) {
-                                        return HtmlWidget(e);
+                                        return Html(data: e);
                                       });
                                       // myDialog(
                                       //     context,

@@ -1,8 +1,6 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:internal_app/global/end_points.dart';
 import 'package:internal_app/global/helper/date_time_helper.dart';
 import 'package:internal_app/global/helper/dialog_widget.dart';
 import 'package:internal_app/global/helper/provider_helper.dart';

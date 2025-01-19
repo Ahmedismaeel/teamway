@@ -1,7 +1,7 @@
 import 'package:core/core.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:internal_app/global/end_points.dart';
@@ -120,7 +120,7 @@ class ActivityWidget extends StatelessWidget {
           ],
         ),
         12.height,
-        HtmlWidget("${item.log_type_title}"),
+        Html(data: "${item.log_type_title}"),
         Text("${item.created_at}"),
         12.height,
         DottedLine(

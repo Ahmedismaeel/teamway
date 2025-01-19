@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:flutter_html/flutter_html.dart';
+// import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:internal_app/global/helper/date_time_helper.dart';
 import 'package:internal_app/global/helper/provider_helper.dart';
@@ -226,7 +227,7 @@ class PtCashWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              HtmlWidget(trans.cash_on_hand.s),
+              Html(data: trans.cash_on_hand.s),
               Text(
                 "${trans.amount.s} OMR",
                 style: CustomStyle.pBold.copyWith(color: UiColors.primary),
