@@ -57,7 +57,7 @@ jobs:
     - name: Initialize Fastlane
       run: |
         cd ios
-        fastlane init
+        FASTLANE_SKIP_CONFIRM=true fastlane init
         cd ..
 
     - name: Set up Fastlane
@@ -69,7 +69,7 @@ jobs:
     - name: Deploy to TestFlight
       run: |
         cd ios
-        bundle exec fastlane beta
+        FASTLANE_SKIP_CONFIRM=true bundle exec fastlane beta
       env:
         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} 
         APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }} 
@@ -79,7 +79,7 @@ jobs:
       if: success()
       run: |
         cd ios
-        bundle exec fastlane firebase
+        FASTLANE_SKIP_CONFIRM=true bundle exec fastlane firebase
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
