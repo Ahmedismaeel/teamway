@@ -54,11 +54,23 @@ jobs:
     - name: Install Fastlane
       run: sudo gem install fastlane
 
+    - name: Ensure Gemfile exists
+      run: |
+        if [ ! -f "ios/Gemfile" ]; then
+          echo "source 'https://rubygems.org'" > ios/Gemfile
+          echo "gem 'fastlane'" >> ios/Gemfile
+        fi
+
     - name: Set up Fastlane
       run: |
         cd ios
         bundle install
         cd ..
+      shell: /bin/bash -e {0}
+      env:
+        PATH: /Users/runner/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/runner/.cargo/bin:/usr/local/opt/curl/bin:/usr/local/bin:/usr/local/sbin:/Users/runner/bin:/Users/runner/.yarn/bin:/Users/runner/Library/Android/sdk/tools:/Users/runner/Library/Android/sdk/platform-tools:/Library/Frameworks/Python.framework/Versions/Current/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/usr/bin:/bin:/usr/sbin:/sbin:/Users/runner/.dotnet/tools
+        FLUTTER_ROOT: /Users/runner/hostedtoolcache/flutter/stable-3.22.0-arm64
+        PUB_CACHE: /Users/runner/.pub-cache
 
     - name: Download Certificates and Provisioning Profiles
       uses: actions/download-artifact@v3
