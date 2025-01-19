@@ -55,7 +55,7 @@ jobs:
       run: sudo gem install fastlane -NV
 
     - name: Download Certificates and Provisioning Profiles
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: certificates
         path: ios/certificates
