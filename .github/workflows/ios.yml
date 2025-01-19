@@ -51,13 +51,25 @@ jobs:
         pod install
         cd ..
 
-    - name: Install Fastlane
-      run: sudo gem install fastlane
-
-    - name: Initialize Fastlane
+    - name: Create Gemfile and Fastfile
       run: |
         cd ios
-        FASTLANE_SKIP_CONFIRM=true fastlane init
+        echo "source 'https://rubygems.org'" > Gemfile
+        echo "gem 'fastlane'" >> Gemfile
+        mkdir -p fastlane
+        echo "default_platform(:ios)" > fastlane/Fastfile
+        echo "platform :ios do" >> fastlane/Fastfile
+        echo "  desc 'Deploy to TestFlight'" >> fastlane/Fastfile
+        echo "  lane :beta do" >> fastlane/Fastfile
+        echo "    build_app(scheme: 'Runner')" >> fastlane/Fastfile
+        echo "    upload_to_testflight(skip_waiting_for_build_processing: true)" >> fastlane/Fastfile
+        echo "  end" >> fastlane/Fastfile
+        echo "  desc 'Deploy to Firebase App Distribution'" >> fastlane/Fastfile
+        echo "  lane :firebase do" >> fastlane/Fastfile
+        echo "    build_app(scheme: 'Runner')" >> fastlane/Fastfile
+        echo "    firebase_app_distribution(app: ENV['FIREBASE_APP_ID'], testers: 'testers@example.com')" >> fastlane/Fastfile
+        echo "  end" >> fastlane/Fastfile
+        echo "end" >> fastlane/Fastfile
         cd ..
 
     - name: Set up Fastlane
@@ -69,7 +81,7 @@ jobs:
     - name: Deploy to TestFlight
       run: |
         cd ios
-        FASTLANE_SKIP_CONFIRM=true bundle exec fastlane beta
+        bundle exec fastlane beta
       env:
         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} 
         APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }} 
@@ -79,7 +91,7 @@ jobs:
       if: success()
       run: |
         cd ios
-        FASTLANE_SKIP_CONFIRM=true bundle exec fastlane firebase
+        bundle exec fastlane firebase
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
