@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "865073764375",
+    "project_id": "internal-app-57e6a",
+    "storage_bucket": "internal-app-57e6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865073764375:android:29bf447e21a2373ccee452",
+        "android_client_info": {
+          "package_name": "com.intellignetprojects.internalapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKxutMnXKbeKiniEScBEQO8Z1_34zXk7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
