@@ -35,6 +35,12 @@ jobs:
           echo "platform :ios, '14.0'" >> ios/Podfile
         fi 
 
+    - name: Set CocoaPods Base Configuration
+      run: |
+        cd ios
+        sed -i '' 's|FLUTTER_BUILD_MODE=release|FLUTTER_BUILD_MODE=release\n#include "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"|' Flutter/Release.xcconfig
+        cd ..
+
     - name: Build iOS
       run: flutter build ios --release --no-codesign
 
