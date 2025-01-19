@@ -51,49 +51,18 @@ jobs:
         pod install
         cd ..
 
-    - name: Create Gemfile and Fastfile
+    - name: Build iOS IPA
+      env:
+        APPLE_ID: ${{ secrets.APPLE_ID }}
+        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        APP_STORE_CONNECT_API_ISSUER: ${{ secrets.APP_STORE_CONNECT_API_ISSUER }}
       run: |
-        cd ios
-        echo "source 'https://rubygems.org'" > Gemfile
-        echo "gem 'fastlane'" >> Gemfile
-        mkdir -p fastlane
-        echo "default_platform(:ios)" > fastlane/Fastfile
-        echo "platform :ios do" >> fastlane/Fastfile
-        echo "  desc 'Deploy to TestFlight'" >> fastlane/Fastfile
-        echo "  lane :beta do" >> fastlane/Fastfile
-        echo "    xcversion(version: '15.4')" >> fastlane/Fastfile
-        echo "    build_app(scheme: 'Runner', export_method: 'app-store', export_options: { provisioningProfiles: { 'com.intelligentprojects.internalApp' => 'match AppStore com.intelligentprojects.internalApp' }, team_id: 'H7T552MSVR' })" >> fastlane/Fastfile
-        echo "    upload_to_testflight(skip_waiting_for_build_processing: true)" >> fastlane/Fastfile
-        echo "  end" >> fastlane/Fastfile
-        echo "  desc 'Deploy to Firebase App Distribution'" >> fastlane/Fastfile
-        echo "  lane :firebase do" >> fastlane/Fastfile
-        echo "    xcversion(version: '15.4')" >> fastlane/Fastfile
-        echo "    build_app(scheme: 'Runner', export_method: 'ad-hoc', export_options: { provisioningProfiles: { 'com.intelligentprojects.internalApp' => 'match AdHoc com.intelligentprojects.internalApp' }, team_id: 'H7T552MSVR' })" >> fastlane/Fastfile
-        echo "    firebase_app_distribution(app: ENV['FIREBASE_APP_ID'], testers: 'testers@example.com')" >> fastlane/Fastfile
-        echo "  end" >> fastlane/Fastfile
-        echo "end" >> fastlane/Fastfile
-        cd ..
-
-    - name: Set up Fastlane
-      run: |
-        cd ios
-        bundle install
-        cd ..
+        flutter build ipa --release --export-options-plist=ios/exportOptions.plist
 
     - name: Deploy to TestFlight
-      run: |
-        cd ios
-        bundle exec fastlane beta
-      env:
-        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} 
-        APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }} 
-        APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-
-    - name: Deploy to Firebase App Distribution
       if: success()
       run: |
-        cd ios
-        bundle exec fastlane firebase
-      env:
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        xcrun altool --upload-app -f build/ios/ipa/TeamwayApp.ipa \
+        -t ios --apiKey $APP_STORE_CONNECT_API_KEY --apiIssuer $APP_STORE_CONNECT_API_ISSUER
+
+
