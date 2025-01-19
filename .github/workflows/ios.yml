@@ -55,7 +55,7 @@ jobs:
       run: sudo gem install fastlane
 
     - name: Initialize Fastlane
-      run: |
+      run: | 
         cd ios
         FASTLANE_SKIP_CONFIRM=true fastlane init
         cd ..
