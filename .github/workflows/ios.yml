@@ -28,9 +28,9 @@ jobs:
 
     - name: Update iOS Deployment Target
       run: |
-        sed -i '' 's/platform :ios, '9.0'/platform :ios, '13.0'/' ios/Podfile
-        if ! grep -q "platform :ios, '13.0'" ios/Podfile; then
-          echo "platform :ios, '13.0'" >> ios/Podfile
+        sed -i '' 's/platform :ios, '9.0'/platform :ios, '14.0'/' ios/Podfile
+        if ! grep -q "platform :ios, '14.0'" ios/Podfile; then
+          echo "platform :ios, '14.0'" >> ios/Podfile
         fi 
 
     - name: Build iOS
