@@ -18,26 +18,43 @@ jobs:
       with:
         ruby-version: '3.1.0'
 
-    - name: Create Gemfile
-      run: |
-        echo "source 'https://rubygems.org'" > Gemfile
-        echo "gem 'fastlane'" >> Gemfile
-        echo "gem 'cocoapods'" >> Gemfile
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.22.0'
 
     - name: Install dependencies
-      run: |
-        gem install bundler
-        bundle install
+      run: flutter pub get
+
+    - name: Build iOS
+      run: flutter build ios --release --no-codesign
 
     - name: Install CocoaPods
-      run: bundle exec pod install --project-directory=ios
+      run: |
+        cd ios
+        pod install
+        cd ..
 
-    - name: Build and Test
-      run: bundle exec fastlane test
+    - name: Set up Fastlane
+      run: |
+        cd ios
+        bundle install
+        cd ..
 
     - name: Deploy to TestFlight
-      run: bundle exec fastlane beta
+      run: |
+        cd ios
+        bundle exec fastlane beta
       env:
         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} 
         APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }} 
         APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+
+    - name: Deploy to Firebase App Distribution
+      if: success()
+      run: |
+        cd ios
+        bundle exec fastlane firebase
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
