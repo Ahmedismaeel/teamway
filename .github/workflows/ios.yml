@@ -26,6 +26,11 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
+    - name: Update iOS Deployment Target
+      run: |
+        sed -i '' 's/MINIMUM_OS_VERSION = 9.0/MINIMUM_OS_VERSION = 13.0/' ios/Podfile
+        sed -i '' 's/platform :ios, '9.0'/platform :ios, '13.0'/' ios/Podfile
+
     - name: Build iOS
       run: flutter build ios --release --no-codesign
 
