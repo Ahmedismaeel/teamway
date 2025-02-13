@@ -72,12 +72,12 @@ jobs:
         FLUTTER_ROOT: /Users/runner/hostedtoolcache/flutter/stable-3.22.0-arm64
         PUB_CACHE: /Users/runner/.pub-cache
 
-    - name: Upload Certificates
-      uses: actions/upload-artifact@v2
+    - name: Upload Certificates 
+      uses: actions/upload-artifact@v3
       with:
         name: certificates
-        path: ios/certificates
-
+        path: ios/certificates 
+# 
     - name: Download Certificates and Provisioning Profiles
       uses: actions/download-artifact@v4
       with:

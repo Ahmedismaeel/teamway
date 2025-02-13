@@ -15,6 +15,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> main() async {
+  //
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferenceHelper.init();
   await initialize();
